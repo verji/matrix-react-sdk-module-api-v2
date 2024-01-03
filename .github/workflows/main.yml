@@ -1,5 +1,16 @@
 name: Main
 on:
+    workflow_dispatch:
+        inputs:
+            version-bump:
+                description: The scale of the version bump required for semver compatibility
+                required: true
+                default: patch
+                type: choice
+                options:
+                    - patch
+                    - minor
+                    - major
     push:
         branches: [main]
     pull_request:
