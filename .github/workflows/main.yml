@@ -11,10 +11,6 @@ on:
                     - patch
                     - minor
                     - major
-    push:
-        branches: [main]
-    pull_request:
-        branches: [main]
 jobs:
     # Global
     # ================================================
