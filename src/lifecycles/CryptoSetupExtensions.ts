@@ -17,6 +17,9 @@ limitations under the License.
  * Types copied (and renamed) from matrix-js-sdk
  */
 
+/**
+ * Copied from https://github.com/matrix-org/matrix-js-sdk/blob/2337d5a7af6265bbcabbd42c1594cd8b1829b00b/src/secret-storage.ts#L39-L50
+ */
 export interface SecretStorageKeyDescriptionCommon {
     /** A human-readable name for this key. */
     // XXX: according to the spec, this is optional
@@ -30,6 +33,9 @@ export interface SecretStorageKeyDescriptionCommon {
     passphrase: PassphraseInfo;
 }
 
+/**
+ * Copied from https://github.com/matrix-org/matrix-js-sdk/blob/2337d5a7af6265bbcabbd42c1594cd8b1829b00b/src/secret-storage.ts#L59-L71
+ */
 export interface SecretStorageKeyDescriptionAesV1 extends SecretStorageKeyDescriptionCommon {
     // XXX: strictly speaking, we should be able to enforce the algorithm here. But
     //   this interface ends up being incorrectly used where other algorithms are in use (notably
@@ -44,8 +50,14 @@ export interface SecretStorageKeyDescriptionAesV1 extends SecretStorageKeyDescri
     mac: string;
 }
 
+/**
+ * Copied from https://github.com/matrix-org/matrix-js-sdk/blob/2337d5a7af6265bbcabbd42c1594cd8b1829b00b/src/secret-storage.ts#L78
+ */
 export type SecretStorageKeyDescription = SecretStorageKeyDescriptionAesV1;
 
+/**
+ * Copied from https://github.com/matrix-org/matrix-js-sdk/blob/2337d5a7af6265bbcabbd42c1594cd8b1829b00b/src/secret-storage.ts#L85-L97
+ */
 export interface PassphraseInfo {
     /** The algorithm to be used to derive the key. */
     algorithm: "m.pbkdf2";
@@ -61,11 +73,9 @@ export interface PassphraseInfo {
 }
 
 /*
- * Types copied (and renamed) from matrix-react-sdk
- * (MatrixClientCreds and Kind)
+ * Copied from https://github.com/matrix-org/matrix-react-sdk/blob/11096b207a1510569f5c54182e328f6148a6475c/src/MatrixClientPeg.ts#L57-L67
  */
-
-export interface IExamineLoginResponseCreds {
+export interface ExamineLoginResponseCreds {
     homeserverUrl: string;
     identityServerUrl?: string;
     userId: string;
@@ -77,27 +87,30 @@ export interface IExamineLoginResponseCreds {
     freshLogin?: boolean;
 }
 
+/**
+ * Copied from https://github.com/matrix-org/matrix-react-sdk/blob/11096b207a1510569f5c54182e328f6148a6475c/src/toasts/SetupEncryptionToast.ts#L71-L75
+ */
 export enum SetupEncryptionKind {
-    SET_UP_ENCRYPTION = "set_up_encryption",
-    UPGRADE_ENCRYPTION = "upgrade_encryption",
-    VERIFY_THIS_SESSION = "verify_this_session",
+    SetUpEncryption = "set_up_encryption",
+    UpgradeEncryption = "upgrade_encryption",
+    VerifyThisSessions = "verify_this_session",
 }
 
-export interface IExtendedMatrixClientCreds extends IExamineLoginResponseCreds {
+export interface ExtendedMatrixClientCreds extends ExamineLoginResponseCreds {
     secureBackupKey?: string;
 }
 
-export interface IProvideCryptoSetupStore {
-    getInstance: () => ISetupEncryptionStoreProjection;
+export interface ProvideCryptoSetupStore {
+    getInstance: () => SetupEncryptionStoreProjection;
 }
 
-export interface ISetupEncryptionStoreProjection {
+export interface SetupEncryptionStoreProjection {
     usePassPhrase(): Promise<void>;
 }
 
-export interface IProvideCryptoSetupExtensions {
-    examineLoginResponse(response: any, credentials: IExtendedMatrixClientCreds): void;
-    persistCredentials(credentials: IExtendedMatrixClientCreds): void;
+export interface ProvideCryptoSetupExtensions {
+    examineLoginResponse(response: any, credentials: ExtendedMatrixClientCreds): void;
+    persistCredentials(credentials: ExtendedMatrixClientCreds): void;
     getSecretStorageKey(): Uint8Array | null;
     createSecretStorageKey(): Uint8Array | null;
     catchAccessSecretStorageError(e: Error): void;
@@ -108,9 +121,9 @@ export interface IProvideCryptoSetupExtensions {
     SHOW_ENCRYPTION_SETUP_UI: boolean;
 }
 
-export abstract class CryptoSetupExtensionsBase implements IProvideCryptoSetupExtensions {
-    public abstract examineLoginResponse(response: any, credentials: IExtendedMatrixClientCreds): void;
-    public abstract persistCredentials(credentials: IExtendedMatrixClientCreds): void;
+export abstract class CryptoSetupExtensionsBase implements ProvideCryptoSetupExtensions {
+    public abstract examineLoginResponse(response: any, credentials: ExtendedMatrixClientCreds): void;
+    public abstract persistCredentials(credentials: ExtendedMatrixClientCreds): void;
     public abstract getSecretStorageKey(): Uint8Array | null;
     public abstract createSecretStorageKey(): Uint8Array | null;
     public abstract catchAccessSecretStorageError(e: Error): void;
@@ -124,7 +137,7 @@ export abstract class CryptoSetupExtensionsBase implements IProvideCryptoSetupEx
 /* Define an interface for setupEncryptionNeeded to help enforce mandatory arguments */
 export interface CryptoSetupArgs {
     kind: SetupEncryptionKind;
-    storeProvider: IProvideCryptoSetupStore;
+    storeProvider: ProvideCryptoSetupStore;
 }
 
 /**
@@ -136,10 +149,10 @@ export interface CryptoSetupArgs {
 export class DefaultCryptoSetupExtensions extends CryptoSetupExtensionsBase {
     public SHOW_ENCRYPTION_SETUP_UI = true;
 
-    public examineLoginResponse(response: any, credentials: IExtendedMatrixClientCreds): void {
+    public examineLoginResponse(response: any, credentials: ExtendedMatrixClientCreds): void {
         console.log("Default empty examineLoginResponse() => void");
     }
-    public persistCredentials(credentials: IExtendedMatrixClientCreds): void {
+    public persistCredentials(credentials: ExtendedMatrixClientCreds): void {
         console.log("Default empty persistCredentials() => void");
     }
 
